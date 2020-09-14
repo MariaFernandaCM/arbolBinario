@@ -17,7 +17,8 @@ import java.util.logging.Logger;
 public class ArbolBinario {
 
     private Nodo raiz;
-
+    private int cant;
+    private int altura;
     //public void adicionarNodo()
     public Nodo getRaiz() {
         return raiz;
@@ -253,7 +254,69 @@ public void niveles() throws ArbolBinarioException {
         podar(x.getIzquierda());
         podar(x.getDerecha());
 }
+        public boolean buscar(int x) {
+        return (buscar(this.raiz, x));
+        }
+        //Borrar el que sea
+    public int borrar(int x) {
+        if (!this.buscar(x)) {
+            return 0;
+        }
 
+        Nodo z = borrar(this.raiz, x);
+        this.setRaiz(z);
+        return x;
+
+    }
+
+    private Nodo borrar(Nodo r, int x) {
+        if (r == null) {
+            return null;//<--Dato no encontrado		
+        }
+        int compara = ((Comparable) r.getDato()).compareTo(x);
+        if (compara > 0) {
+            r.setIzquierda(borrar(r.getIzquierda(), x));
+        } else if (compara < 0) {
+            r.setDerecha(borrar(r.getDerecha(), x));
+        } else {
+            System.out.println("Encontro el dato:" + x);
+            if (r.getIzquierda() != null && r.getDerecha() != null) {
+                
+                Nodo cambiar = buscarMin(r.getDerecha());
+                int aux = cambiar.getDato();
+                cambiar.setDato(r.getDato());
+                r.setDato(aux);
+                r.setDerecha(borrar(r.getDerecha(), x));
+              
+            } else {
+                r = (r.getIzquierda() != null) ? r.getIzquierda() : r.getDerecha();
+                 System.out.println("Entro cuando le faltan ramas ");
+               
+            }
+        }
+        return r;
+        }
+         private boolean buscar(Nodo r, int x) {
+        if (r == null) {
+            return (false);
+        }
+        int compara = ((Comparable) r.getDato()).compareTo(x);
+        if (compara > 0) {
+            return (buscar(r.getIzquierda(), x));
+        } else if (compara < 0) {
+            return (buscar(r.getDerecha(), x));
+        } else {
+            return (true);
+        }
+    }
+
+           private Nodo buscarMin(Nodo r) {
+        for (; r.getIzquierda() != null; r = r.getIzquierda());
+        return (r);
+    }
+
+     
+    
  public ArrayList imprimirNivel() {
      ArrayList l=new ArrayList();
      if (raiz != null){
@@ -283,9 +346,9 @@ public void niveles() throws ArbolBinarioException {
 
     private void multiplicar(Nodo reco, int nivel) {
         if (reco != null) {
-            reco.setDato(reco.getDato() * 3);
-            multiplicar(reco.getIzquierda(), nivel + 1);
-            multiplicar(reco.getDerecha(), nivel + 1);
+            reco.setDato(reco.getDato()* reco.getDato());
+            multiplicar(reco.getIzquierda(), nivel );
+            multiplicar(reco.getDerecha(), nivel );
         }
     }
      public String borrarMayor() {
@@ -308,22 +371,23 @@ public void niveles() throws ArbolBinarioException {
     }
      
      public String borrarNivel() {
-        Nodo reco=raiz.getIzquierda();
+        Nodo reco=raiz.getIzquierda();    
         if (raiz != null) {
             if (raiz.getDerecha()== null) {
                 raiz = raiz.getIzquierda();
             } else {
-                Nodo anterior = raiz;
+                Nodo nivel = raiz;
                 reco = raiz.getDerecha();
                 while (reco.getDerecha()!= null) {
-                    anterior = reco;
+                    
+                    nivel = reco;
                     reco = reco.getDerecha();
                 }
-                
-                anterior.setDerecha(reco.getIzquierda());
+                                
+                nivel.setDerecha(reco.getIzquierda ());
             }
         }
-        return ("Valor eliminado: " + reco.getDato());
+        return ("Nivel Eliminado: " + reco.getDato());
     }
       public String borrarMenor() {
         Nodo reco=raiz.getIzquierda();
@@ -364,25 +428,35 @@ public void niveles() throws ArbolBinarioException {
     protected boolean esHoja(Nodo x){
         return (x != null && x.getIzquierda() == null && x.getDerecha() == null);
     }
-    //MÉTODO BUSCAR
-    public boolean buscar(int x){
-        return (buscar(this.raiz, x));
+    
+    public String cantidadNodos(){
+        cant = 0;
+        cantidadNodos(raiz);
+        return "" + cant;
     }
     
-   private boolean buscar(Nodo r, int x){
-       if (r == null){
-           return (false);
-       }
-       int compara = ((Comparable) r.getDato()).compareTo(x);
-       if (compara > 0){
-           return (buscar(r.getIzquierda(), x));
-       }
-       else if (compara < 0) {
-           return (buscar(r.getDerecha(), x));
-       }else{
-           return (true);
-       }
-   }
+    private void cantidadNodos(Nodo reco){
+        if (reco != null){
+            cant++;
+            cantidadNodos(reco.getIzquierda());
+            cantidadNodos(reco.getDerecha());            
+        }        
+    }  
+     public String cantidadNodosHoja(){
+        cant = 0;
+        cantidadNodosHoja(raiz);
+        return "" + cant;
     }
+    
+    private void cantidadNodosHoja(Nodo reco){
+        if (reco != null){
+            if (reco.getIzquierda() == null && reco.getDerecha() == null){
+                cant++;
+            }
+            cantidadNodosHoja(reco.getIzquierda());
+            cantidadNodosHoja(reco.getDerecha());
+        }
+    }
+}   
 
 
