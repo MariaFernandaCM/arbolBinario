@@ -32,7 +32,11 @@ public class ArbolBinario {
             throw new ArbolBinarioException("El árbol está vacío");
         }
     }
-
+public void niveles() throws ArbolBinarioException {
+        if (raiz == null) {
+            throw new ArbolBinarioException("El árbol está vacío");
+        }
+    }
     public void adicionarNodo(int dato, Nodo ubicacion) throws ArbolBinarioException {
         if (raiz == null) {
             raiz = new Nodo(dato);
@@ -250,6 +254,135 @@ public class ArbolBinario {
         podar(x.getDerecha());
 }
 
+ public ArrayList imprimirNivel() {
+     ArrayList l=new ArrayList();
+     if (raiz != null){
+         String[] niveles = new String[raiz.obtenerAlturaNodo() + 1];
+        
+        imprimirNivel(raiz, 0, niveles);
+        for (int i = 0; i < niveles.length; i++) {
+            l.add(niveles[i] + " ");
+            //System.out.println(niveles[i] + " ");
+        }
+     }
+        return l;
+    }
+ 
+      public void imprimirNivel(Nodo pivote, int nivel2, String[] niveles) {
+        if (pivote != null) {
+            niveles[nivel2] = pivote.getDato() + ", " + ((niveles[nivel2] != null) ? niveles[nivel2] : "");
+            imprimirNivel(pivote.getDerecha(), nivel2 + 1, niveles);
+            imprimirNivel(pivote.getIzquierda(), nivel2 + 1, niveles);
+}
+    }
+      
+      public boolean multiplicar() {
+            multiplicar(raiz, 1);
+            return true;
+    }
+
+    private void multiplicar(Nodo reco, int nivel) {
+        if (reco != null) {
+            reco.setDato(reco.getDato() * 3);
+            multiplicar(reco.getIzquierda(), nivel + 1);
+            multiplicar(reco.getDerecha(), nivel + 1);
+        }
+    }
+     public String borrarMayor() {
+        Nodo reco=raiz.getIzquierda();
+        if (raiz != null) {
+            if (raiz.getDerecha()== null) {
+                raiz = raiz.getIzquierda();
+            } else {
+                Nodo anterior = raiz;
+                reco = raiz.getDerecha();
+                while (reco.getDerecha()!= null) {
+                    anterior = reco;
+                    reco = reco.getDerecha();
+                }
+                
+                anterior.setDerecha(reco.getIzquierda());
+            }
+        }
+        return ("Valor eliminado: " + reco.getDato());
+    }
+     
+     public String borrarNivel() {
+        Nodo reco=raiz.getIzquierda();
+        if (raiz != null) {
+            if (raiz.getDerecha()== null) {
+                raiz = raiz.getIzquierda();
+            } else {
+                Nodo anterior = raiz;
+                reco = raiz.getDerecha();
+                while (reco.getDerecha()!= null) {
+                    anterior = reco;
+                    reco = reco.getDerecha();
+                }
+                
+                anterior.setDerecha(reco.getIzquierda());
+            }
+        }
+        return ("Valor eliminado: " + reco.getDato());
+    }
+      public String borrarMenor() {
+        Nodo reco=raiz.getIzquierda();
+        if (raiz != null) {
+            if (raiz.getIzquierda()== null) {
+                raiz = raiz.getDerecha();
+            } else {
+                Nodo anterior = raiz;
+                reco = raiz.getIzquierda();
+                while (reco.getIzquierda()!= null) {
+                    anterior = reco;
+                    reco = reco.getIzquierda();
+                }
+                
+                anterior.setIzquierda(reco.getDerecha());
+            }
+        }
+        return ("Valor eliminado: " + reco.getDato());
+    }
+      // HOJAS
+    public void getHojas(Nodo r, ArrayList l){
+        if(r != null){
+            if (this.esHoja(r)){
+                l.add(r.getDato());
+            }
+            getHojas(r.getIzquierda(), l);
+            getHojas(r.getDerecha(), l);
+        }
+    }
+    
+    public ArrayList getHojas(){
+        ArrayList lista = new ArrayList();
+        getHojas(this.raiz, lista);
+        return (lista);
+    }  
+   
+    
+    protected boolean esHoja(Nodo x){
+        return (x != null && x.getIzquierda() == null && x.getDerecha() == null);
+    }
+    //MÉTODO BUSCAR
+    public boolean buscar(int x){
+        return (buscar(this.raiz, x));
+    }
+    
+   private boolean buscar(Nodo r, int x){
+       if (r == null){
+           return (false);
+       }
+       int compara = ((Comparable) r.getDato()).compareTo(x);
+       if (compara > 0){
+           return (buscar(r.getIzquierda(), x));
+       }
+       else if (compara < 0) {
+           return (buscar(r.getDerecha(), x));
+       }else{
+           return (true);
+       }
+   }
     }
 
 
